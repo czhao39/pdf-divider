@@ -4,3 +4,14 @@
     margin-right: auto;
     max-width: 100%;
 }
+
+#submission-container {
+    position: relative;
+}
+
+.divider {
+    position: absolute;
+    border-color: red;
+    margin: 0;
+    width: 100%;
+}
