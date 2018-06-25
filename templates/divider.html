@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+
+{% block head %}
+{{ super() }}
+<link rel="stylesheet" href="/css/divider.css" />
+{% endblock %}
+
+
+{% block content %}
+<div class="panel panel-default">
+    <div class="panel-heading">Click to add dividers.</div>
+    <div class="panel-body">
+        <img id="submission-img" src="data:image/png;base64,{{ image_b64 }}"/>
+    </div>
+</div>
+{% endblock %}
