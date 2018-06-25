@@ -5,6 +5,11 @@
     max-width: 100%;
 }
 
+#submission-panel {
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
 #submission-container {
     position: relative;
 }
