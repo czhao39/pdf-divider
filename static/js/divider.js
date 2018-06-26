@@ -38,6 +38,7 @@ function submit() {
         dataType: "text",
         success: function() {
             alert("Saved dividers.");
+            window.location.href = "/divider_display"
         },
         error: function() {
             alert("An error occurred.");

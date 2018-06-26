@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+
+{% block head %}
+{{ super() }}
+<link rel="stylesheet" href="/css/divider.css" />
+{% endblock %}
+
+
+{% block content %}
+<div id="submission-panel" class="panel panel-default">
+    <div class="panel-heading">Submission review.</div>
+    <div class="panel-body">
+        <div id="submission-container">
+            <img id="submission-img" src="data:image/png;base64,{{ image_b64 }}"/>
+            {% for divider_y in divider_ys %}
+            <hr class="divider" style="top: {{ divider_y*100 }}%">
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

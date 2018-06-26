@@ -8,7 +8,6 @@ from werkzeug.utils import secure_filename
 from wand.image import Image, Color
 
 UPLOAD_FOLDER = os.path.join(os.path.dirname(os.path.realpath(__file__)), "uploads/")
-print(UPLOAD_FOLDER)
 ALLOWED_EXTENSIONS = {"pdf"}
 
 app = Flask(__name__, static_url_path="")
@@ -28,6 +27,26 @@ def index():
     return render_template("submit_pdf.html")
 
 
+def pdf_path_to_png_b64(pdf_path):
+    # Convert to and save PNG to stream
+    png_stream = BytesIO()
+    with Image(filename=pdf_path) as pdf_image:
+        num_pages = len(pdf_image.sequence)
+        with Image(width=pdf_image.width, height=pdf_image.height * num_pages) as png_image:
+            for p in range(num_pages):
+                png_image.composite(
+                        pdf_image.sequence[p],
+                        top=pdf_image.height * p,
+                        left=0
+                        )
+                png_image.format = "png"
+            png_image.background_color = Color("white")
+            png_image.alpha_channel = "remove"
+            png_image.save(file=png_stream)
+    # Return PNG in base 64
+    return base64.b64encode(png_stream.getvalue()).decode("ascii")
+
+
 @app.route("/divider", methods=["POST"])
 def divider():
     # Save PDF
@@ -42,27 +61,11 @@ def divider():
         flash("Invalid file. Must be a PDF.")
         return redirect(request.url)
     pdf_filename = secure_filename(pdf_file.filename)
-    path_to_pdf = os.path.join(app.config["UPLOAD_FOLDER"], pdf_filename)
-    pdf_file.save(path_to_pdf)
+    pdf_path = os.path.join(app.config["UPLOAD_FOLDER"], pdf_filename)
+    session["pdf_path"] = pdf_path
+    pdf_file.save(pdf_path)
 
-    # Convert to and save PNG to stream
-    png_stream = BytesIO()
-    with Image(filename=path_to_pdf) as pdf_image:
-        num_pages = len(pdf_image.sequence)
-        with Image(width=pdf_image.width, height=pdf_image.height * num_pages) as png_image:
-            for p in range(num_pages):
-                png_image.composite(
-                    pdf_image.sequence[p],
-                    top=pdf_image.height * p,
-                    left=0
-                )
-                png_image.format = "png"
-            png_image.background_color = Color("white")
-            png_image.alpha_channel = "remove"
-            png_image.save(file=png_stream)
-
-    # Return PNG in base 64
-    png_b64 = base64.b64encode(png_stream.getvalue()).decode("ascii")
+    png_b64 = pdf_path_to_png_b64(pdf_path)
     return render_template("divider.html", image_b64=png_b64)
 
 
@@ -72,6 +75,17 @@ def submit_dividers():
     divider_ys = request.json.get("dividerYs", [])
     print(divider_ys)
     return ""
+
+
+@app.route("/divider_display")
+def divider_display():
+    # TODO: With actual DB, would use submission IDs instead of a temporary session.
+    if "pdf_path" not in session:
+        flash("Need to create a submission.")
+        return redirect(request.url)
+
+    png_b64 = pdf_path_to_png_b64(session["pdf_path"])
+    return render_template("divider_display.html", image_b64=png_b64, divider_ys=divider_ys)
 
 
 if __name__ == "__main__":
