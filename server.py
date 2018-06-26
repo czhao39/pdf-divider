@@ -16,11 +16,14 @@ app.secret_key = b"\xd9h\xf8\xd2-\x8c\xe6\xdc;\r\xd9\x10'[\x03;"
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 
 
+divider_ys = None
+
+
 def is_allowed_file(filename):
     return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
-@app.route("/", methods=["GET"])
+@app.route("/")
 def index():
     return render_template("submit_pdf.html")
 
@@ -61,6 +64,14 @@ def divider():
     # Return PNG in base 64
     png_b64 = base64.b64encode(png_stream.getvalue()).decode("ascii")
     return render_template("divider.html", image_b64=png_b64)
+
+
+@app.route("/submit_dividers", methods=["POST"])
+def submit_dividers():
+    global divider_ys
+    divider_ys = request.json.get("dividerYs", [])
+    print(divider_ys)
+    return ""
 
 
 if __name__ == "__main__":
