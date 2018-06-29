@@ -35,10 +35,9 @@ function submit() {
         method: "POST",
         contentType: "application/json;charset=UTF-8",
         data: JSON.stringify(data),
-        dataType: "text",
-        success: function() {
+        success: function(data) {
             alert("Saved dividers.");
-            window.location.href = "/divider_display"
+            window.location.href = "/divider_display/" + data.submission_id;
         },
         error: function() {
             alert("An error occurred.");

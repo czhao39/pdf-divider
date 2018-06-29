@@ -15,7 +15,8 @@ app.secret_key = b"\xd9h\xf8\xd2-\x8c\xe6\xdc;\r\xd9\x10'[\x03;"
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 
 
-divider_ys = None
+# A fake 'database' that maps primary keys (array indices) to file names and divider Y coordinates
+db = []
 
 
 def is_allowed_file(filename):
@@ -52,17 +53,17 @@ def divider():
     # Save PDF
     if "file" not in request.files:
         flash("No file uploaded.")
-        return redirect(request.url)
+        return redirect(url_for("index"))
     pdf_file = request.files["file"]
     if not pdf_file or pdf_file.filename == "":
         flash("No file selected.")
-        return redirect(request.url)
+        return redirect(url_for("index"))
     if not is_allowed_file(pdf_file.filename):
         flash("Invalid file. Must be a PDF.")
-        return redirect(request.url)
+        return redirect(url_for("index"))
     pdf_filename = secure_filename(pdf_file.filename)
+    session["pdf_filename"] = pdf_filename
     pdf_path = os.path.join(app.config["UPLOAD_FOLDER"], pdf_filename)
-    session["pdf_path"] = pdf_path
     pdf_file.save(pdf_path)
 
     png_b64 = pdf_path_to_png_b64(pdf_path)
@@ -71,23 +72,24 @@ def divider():
 
 @app.route("/submit_dividers", methods=["POST"])
 def submit_dividers():
-    global divider_ys
-    divider_ys = request.json.get("dividerYs", [])
-    print(divider_ys)
-    return ""
-
-
-@app.route("/divider_display")
-def divider_display():
-    # TODO: With actual DB, would use submission IDs instead of a temporary session.
-    if "pdf_path" not in session:
+    if "pdf_filename" not in session:
         flash("Need to create a submission.")
-        return redirect(request.url)
+        return redirect(url_for("index"))
+    db.append({"pdf_filename": session["pdf_filename"], "divider_ys": request.json.get("dividerYs", [])})
+    print(db[-1])
+    return jsonify({"submission_id": len(db) - 1})
 
-    png_b64 = pdf_path_to_png_b64(session["pdf_path"])
-    return render_template("divider_display.html", image_b64=png_b64, divider_ys=divider_ys)
+
+@app.route("/divider_display/<int:submission_id>")
+def divider_display(submission_id):
+    if submission_id >= len(db):
+        flash("Submission does not exist.")
+        return redirect(request.url)
+    pdf_path = os.path.join(app.config["UPLOAD_FOLDER"], db[submission_id]["pdf_filename"])
+    png_b64 = pdf_path_to_png_b64(pdf_path)
+    return render_template("divider_display.html", image_b64=png_b64, divider_ys=db[submission_id]["divider_ys"])
 
 
 if __name__ == "__main__":
     import sys
-    app.run(host="localhost", port=int(sys.argv[1]) if len(sys.argv) > 1 else 8080, threaded=True)
+    app.run(host="localhost", port=int(sys.argv[1]) if len(sys.argv) > 1 else 8080, debug=True, threaded=True)
