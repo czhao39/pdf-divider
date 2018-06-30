@@ -1,26 +1,45 @@
 var dividers = [];
+var $submissionContainer;
 
 $(document).ready(function() {
-    var $submissionContainer = $("#submission-container");
+    $submissionContainer = $("#submission-container");
 
     $("#submission-img").click(function(e) {
         var $this = $(this);
         var clickY = e.pageY - $this.offset().top;
         var clickYProp = clickY / $this.height();
-        console.log(clickYProp);
-
-        var $divider = $("<hr class='divider'>");
-        $divider.yProp = clickYProp;
-        $divider.css("top", clickYProp*100 + "%");
-        dividers.push($divider);
-        $submissionContainer.append($divider);
+        addDivider(clickYProp);
         console.log(getDividerYs());
     });
 });
 
+function addDivider(yProp) {
+    var $divider = $("<hr class='divider'>");
+    $divider.css("top", yProp*100 + "%");
+    var $label = $("<div class='divider-label'></div>")
+    $label.css("top", yProp*100 + "%");
+    dividers.push({
+        yProp: yProp,
+        divider: $divider,
+        label: $label
+    });
+    updateLabels();
+    $submissionContainer.append($divider);
+    $submissionContainer.append($label);
+}
+
+function updateLabels() {
+    dividers.sort(function(a, b) {
+        return a.yProp - b.yProp;
+    });
+    for (var i = 0; i < dividers.length; i++) {
+        dividers[i].label.text("Part " + (i + 1));
+    }
+}
+
 function getDividerYs() {
     dividerYs = [];
-    for (i = 0; i < dividers.length; i++) {
+    for (var i = 0; i < dividers.length; i++) {
         dividerYs.push(dividers[i].yProp);
     }
     return dividerYs;
