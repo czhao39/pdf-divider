@@ -16,25 +16,39 @@ $(document).ready(function() {
 function addDivider(yProp) {
     var $divider = $("<hr class='divider'>");
     $divider.css("top", yProp*100 + "%");
+    $divider.click(deleteDivider)
     var $label = $("<div class='divider-label'></div>")
     $label.css("top", yProp*100 + "%");
+    $label.click(deleteDivider)
     dividers.push({
         yProp: yProp,
         divider: $divider,
         label: $label
     });
-    updateLabels();
+    updateIndices();
     $submissionContainer.append($divider);
     $submissionContainer.append($label);
 }
 
-function updateLabels() {
+/* Updates divider indices based on Y position, and accordingly updates labels */
+function updateIndices() {
     dividers.sort(function(a, b) {
         return a.yProp - b.yProp;
     });
     for (var i = 0; i < dividers.length; i++) {
+        dividers[i].divider.data("index", i);
+        dividers[i].label.data("index", i);
         dividers[i].label.text("Part " + (i + 1));
     }
+}
+
+function deleteDivider() {
+    var index = $(this).data("index");
+    console.log(index);
+    dividers[index].divider.remove();
+    dividers[index].label.remove();
+    dividers.splice(index, 1);
+    updateIndices();
 }
 
 function getDividerYs() {

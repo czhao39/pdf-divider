@@ -20,8 +20,10 @@
     border-color: red;
     margin: 0;
     width: 100%;
+    cursor: pointer;
 }
 
 .divider-label {
     position: absolute;
+    cursor: pointer;
 }
