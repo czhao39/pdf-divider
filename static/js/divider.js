@@ -20,22 +20,22 @@ function addDivider(yProp) {
     var $label = $("<div class='divider-label'></div>")
     $label.css("top", yProp*100 + "%");
     $label.click(deleteDivider)
-    dividers.push({
+    for (var i = 0; i < dividers.length; i++)
+        if (yProp < dividers[i].yProp)
+            break;
+    dividers.splice(i, 0, {
         yProp: yProp,
         divider: $divider,
         label: $label
     });
-    updateIndices();
+    updateIndices(i);
     $submissionContainer.append($divider);
     $submissionContainer.append($label);
 }
 
-/* Updates divider indices based on Y position, and accordingly updates labels */
-function updateIndices() {
-    dividers.sort(function(a, b) {
-        return a.yProp - b.yProp;
-    });
-    for (var i = 0; i < dividers.length; i++) {
+/* Updates divider indices starting at the given index and accordingly updates labels */
+function updateIndices(start) {
+    for (var i = start; i < dividers.length; i++) {
         dividers[i].divider.data("index", i);
         dividers[i].label.data("index", i);
         dividers[i].label.text("Part " + (i + 1));
@@ -48,14 +48,13 @@ function deleteDivider() {
     dividers[index].divider.remove();
     dividers[index].label.remove();
     dividers.splice(index, 1);
-    updateIndices();
+    updateIndices(index);
 }
 
 function getDividerYs() {
     dividerYs = [];
-    for (var i = 0; i < dividers.length; i++) {
+    for (var i = 0; i < dividers.length; i++)
         dividerYs.push(dividers[i].yProp);
-    }
     return dividerYs;
 }
 
