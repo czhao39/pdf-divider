@@ -3,8 +3,8 @@
 import base64
 from io import BytesIO
 import os
+import uuid
 from flask import *
-from werkzeug.utils import secure_filename
 from wand.image import Image, Color
 
 UPLOAD_FOLDER = os.path.join(os.path.dirname(os.path.realpath(__file__)), "uploads/")
@@ -61,7 +61,7 @@ def divider():
     if not is_allowed_file(pdf_file.filename):
         flash("Invalid file. Must be a PDF.")
         return redirect(url_for("index"))
-    pdf_filename = secure_filename(pdf_file.filename)
+    pdf_filename = "{}.pdf".format(uuid.uuid4())
     session["pdf_filename"] = pdf_filename
     pdf_path = os.path.join(app.config["UPLOAD_FOLDER"], pdf_filename)
     pdf_file.save(pdf_path)
@@ -84,7 +84,7 @@ def submit_dividers():
 def divider_display(submission_id):
     if submission_id >= len(db):
         flash("Submission does not exist.")
-        return redirect(request.url)
+        return redirect(url_for("index"))
     pdf_path = os.path.join(app.config["UPLOAD_FOLDER"], db[submission_id]["pdf_filename"])
     png_b64 = pdf_path_to_png_b64(pdf_path)
     return render_template("divider_display.html", image_b64=png_b64, divider_ys=db[submission_id]["divider_ys"])

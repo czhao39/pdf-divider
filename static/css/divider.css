@@ -16,6 +16,7 @@
 
 .divider {
     position: absolute;
+    border-width: 3px;
     border-color: red;
     margin: 0;
     width: 100%;
