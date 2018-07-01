@@ -16,14 +16,17 @@
 
 .divider {
     position: absolute;
-    border-width: 3px;
-    border-color: red;
-    margin: 0;
+    background-color: red;
+    background-clip: content-box;
     width: 100%;
+    height: 12px;
+    margin-top: -6px;
+    padding: 5px 0;
     cursor: pointer;
 }
 
 .divider-label {
     position: absolute;
     cursor: pointer;
+    margin-top: 5px;
 }

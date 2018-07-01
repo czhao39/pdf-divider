@@ -14,7 +14,7 @@ $(document).ready(function() {
 });
 
 function addDivider(yProp) {
-    var $divider = $("<hr class='divider'>");
+    var $divider = $("<div class='divider'></div>");
     $divider.css("top", yProp*100 + "%");
     $divider.click(deleteDivider)
     var $label = $("<div class='divider-label'></div>")

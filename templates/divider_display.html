@@ -14,7 +14,7 @@
         <div id="submission-container">
             <img id="submission-img" src="data:image/png;base64,{{ image_b64 }}"/>
             {% for divider_y in divider_ys %}
-            <hr class="divider" style="top: {{ divider_y*100 }}%">
+            <div class="divider" style="top: {{ divider_y*100 }}%"></div>
             <div class="divider-label" style="top: {{ divider_y*100 }}%">Part {{ loop.index }}</div>
             {% endfor %}
         </div>
