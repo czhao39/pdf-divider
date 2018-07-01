@@ -4,9 +4,9 @@
 {% block head %}
 {{ super() }}
 
-<link rel="stylesheet" href="/css/divider.css" />
+<link rel="stylesheet" href="{{ url_for('static', filename='/css/divider.css') }}" />
 
-<script type="text/javascript" src="/js/submission_panel.js"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='/js/submission_panel.js') }}"></script>
 {% endblock %}
 
 
