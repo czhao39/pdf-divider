@@ -5,7 +5,7 @@
     max-width: 100%;
 }
 
-#submission-panel {
+#submission-panel > .panel-body {
     max-height: 90vh;
     overflow-y: auto;
 }

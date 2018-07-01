@@ -31,15 +31,15 @@ def index():
 def pdf_path_to_png_b64(pdf_path):
     # Convert to and save PNG to stream
     png_stream = BytesIO()
-    with Image(filename=pdf_path) as pdf_image:
+    with Image(filename=pdf_path, resolution=160) as pdf_image:
         num_pages = len(pdf_image.sequence)
         with Image(width=pdf_image.width, height=pdf_image.height * num_pages) as png_image:
             for p in range(num_pages):
                 png_image.composite(
-                        pdf_image.sequence[p],
-                        top=pdf_image.height * p,
-                        left=0
-                        )
+                    pdf_image.sequence[p],
+                    top=pdf_image.height * p,
+                    left=0
+                )
                 png_image.format = "png"
             png_image.background_color = Color("white")
             png_image.alpha_channel = "remove"
