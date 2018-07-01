@@ -1,8 +1,5 @@
-#submission-img {
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-    max-width: 100%;
+#submission-panel {
+    position: relative;
 }
 
 #submission-panel > .panel-body {
@@ -12,6 +9,20 @@
 
 #submission-container {
     position: relative;
+}
+
+#submission-img {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 100%;
+}
+
+.panel-button-group {
+    position: absolute;
+    z-index: 10;
+    bottom: 2em;
+    right: 2em;
 }
 
 .divider {
@@ -28,5 +39,4 @@
 .divider-label {
     position: absolute;
     cursor: pointer;
-    margin-top: 5px;
 }

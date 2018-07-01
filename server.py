@@ -28,10 +28,10 @@ def index():
     return render_template("submit_pdf.html")
 
 
-def pdf_path_to_png_b64(pdf_path):
+def pdf_path_to_png_b64(pdf_path, resolution=160):
     # Convert to and save PNG to stream
     png_stream = BytesIO()
-    with Image(filename=pdf_path, resolution=160) as pdf_image:
+    with Image(filename=pdf_path, resolution=resolution) as pdf_image:
         num_pages = len(pdf_image.sequence)
         with Image(width=pdf_image.width, height=pdf_image.height * num_pages) as png_image:
             for p in range(num_pages):
@@ -86,7 +86,7 @@ def divider_display(submission_id):
         flash("Submission does not exist.")
         return redirect(url_for("index"))
     pdf_path = os.path.join(app.config["UPLOAD_FOLDER"], db[submission_id]["pdf_filename"])
-    png_b64 = pdf_path_to_png_b64(pdf_path)
+    png_b64 = pdf_path_to_png_b64(pdf_path, resolution=180)
     return render_template("divider_display.html", image_b64=png_b64, divider_ys=db[submission_id]["divider_ys"])
 
 

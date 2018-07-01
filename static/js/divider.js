@@ -1,9 +1,6 @@
 var dividers = [];
-var $submissionContainer;
 
 $(document).ready(function() {
-    $submissionContainer = $("#submission-container");
-
     $("#submission-img").click(function(e) {
         var $this = $(this);
         var clickY = e.pageY - $this.offset().top;
@@ -29,6 +26,7 @@ function addDivider(yProp) {
         label: $label
     });
     updateIndices(i);
+    var $submissionContainer = $("#submission-container");
     $submissionContainer.append($divider);
     $submissionContainer.append($label);
 }

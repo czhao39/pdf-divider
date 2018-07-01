@@ -3,12 +3,19 @@
 
 {% block head %}
 {{ super() }}
+
 <link rel="stylesheet" href="/css/divider.css" />
+
+<script type="text/javascript" src="/js/submission_panel.js"></script>
 {% endblock %}
 
 
 {% block content %}
 <div id="submission-panel" class="panel panel-default">
+    <div class="panel-button-group btn-group-vertical" role="group">
+        <button type="button" id="submission-zoomin-btn" class="btn btn-primary"><span class="glyphicon glyphicon-zoom-in"></span></button>
+        <button type="button" id="submission-zoomout-btn" class="btn btn-primary"><span class="glyphicon glyphicon-zoom-out"></span></button>
+    </div>
     <div class="panel-heading">Submission review.</div>
     <div class="panel-body">
         <div id="submission-container">
