@@ -12,7 +12,7 @@
 
 {% block content %}
 <div class="row">
-    <div class="col-sm-2">
+    <div id="sidenav-container" class="col-sm-2">
         <ul class="nav nav-pills nav-stacked">
             {% for index in range(1, divider_ys|length + 1) %}
             <li><a href="#part-{{ index }}">Part {{ index }}</a></li>
@@ -26,7 +26,7 @@
                 <button type="button" id="submission-zoomout-btn" class="btn btn-primary"><span class="glyphicon glyphicon-zoom-out"></span></button>
             </div>
             <div class="panel-heading">Submission review.</div>
-            <div class="panel-body">
+            <div class="panel-body" data-spy="scroll" data-target="#sidenav-container" data-offset="100">
                 <div id="submission-container">
                     <img id="submission-img" src="data:image/png;base64,{{ image_b64 }}"/>
                     {% for divider_y in divider_ys %}
