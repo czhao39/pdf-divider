@@ -11,19 +11,30 @@
 
 
 {% block content %}
-<div id="submission-panel" class="panel panel-default">
-    <div class="panel-button-group btn-group-vertical" role="group">
-        <button type="button" id="submission-zoomin-btn" class="btn btn-primary"><span class="glyphicon glyphicon-zoom-in"></span></button>
-        <button type="button" id="submission-zoomout-btn" class="btn btn-primary"><span class="glyphicon glyphicon-zoom-out"></span></button>
-    </div>
-    <div class="panel-heading">Submission review.</div>
-    <div class="panel-body">
-        <div id="submission-container">
-            <img id="submission-img" src="data:image/png;base64,{{ image_b64 }}"/>
-            {% for divider_y in divider_ys %}
-            <div class="divider" style="top: {{ divider_y*100 }}%"></div>
-            <div class="divider-label" style="top: {{ divider_y*100 }}%">Part {{ loop.index }}</div>
+<div class="row">
+    <div class="col-sm-2">
+        <ul class="nav nav-pills nav-stacked">
+            {% for index in range(1, divider_ys|length + 1) %}
+            <li><a href="#part-{{ index }}">Part {{ index }}</a></li>
             {% endfor %}
+        </ul>
+    </div>
+    <div class="col-sm-10">
+        <div id="submission-panel" class="panel panel-default">
+            <div class="panel-button-group btn-group-vertical" role="group">
+                <button type="button" id="submission-zoomin-btn" class="btn btn-primary"><span class="glyphicon glyphicon-zoom-in"></span></button>
+                <button type="button" id="submission-zoomout-btn" class="btn btn-primary"><span class="glyphicon glyphicon-zoom-out"></span></button>
+            </div>
+            <div class="panel-heading">Submission review.</div>
+            <div class="panel-body">
+                <div id="submission-container">
+                    <img id="submission-img" src="data:image/png;base64,{{ image_b64 }}"/>
+                    {% for divider_y in divider_ys %}
+                    <div id="part-{{ loop.index }}" class="divider" style="top: {{ divider_y*100 }}%"></div>
+                    <div class="divider-label" style="top: {{ divider_y*100 }}%">Part {{ loop.index }}</div>
+                    {% endfor %}
+                </div>
+            </div>
         </div>
     </div>
 </div>
